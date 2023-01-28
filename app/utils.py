@@ -1,11 +1,17 @@
+import os
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
+import environ
+
+from trade.settings import BASE_DIR
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 API_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 headers = {
   'Accepts': 'application/json',
-  'X-CMC_PRO_API_KEY': '028fd28d-1ee4-410e-88b8-55b0c7e729d9',
+  'X-CMC_PRO_API_KEY': env("API_KEY"),
 }
 
 session = Session()
