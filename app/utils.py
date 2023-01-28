@@ -1,11 +1,18 @@
+import os
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
+import environ
+
+from trade.settings import BASE_DIR
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 API_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+
 headers = {
   'Accepts': 'application/json',
-  'X-CMC_PRO_API_KEY': '028fd28d-1ee4-410e-88b8-55b0c7e729d9',
+  'X-CMC_PRO_API_KEY': env("API_KEY"),
 }
 
 session = Session()
@@ -34,10 +41,36 @@ def formatted_data(data):
     formatted_data.append(dict)
   return formatted_data
 
-def get_watchlist():
+def condition_AND_list(conditions: list([bool])) -> bool:
+  for cond in conditions:
+    if not cond:
+      return False
+  return True
+
+def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min):
+  filtered_data = []
+  for item in data:
+    conditions = []
+    if search:
+      conditions.append(search in item["Name"])
+    if vol_change_min:
+      conditions.append(float(vol_change_min) <= item["Volume change 24h"])
+    if dom_min:
+      conditions.append(float(dom_min) <= item["Market cap dominance"])
+    if vol_per_mcap_min:
+      conditions.append(float(vol_per_mcap_min) <= item["Volume 24h / market cap"])
+    if condition_AND_list(conditions):
+      filtered_data.append(item)
+  return filtered_data
+
+def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min):
   try:
+    # parameters = {
+    #   'limit', limit,
+    #   'start', start,
+    # }
     response = session.get(API_URL)
     data = json.loads(response.text)
-    return formatted_data(data["data"])
+    return filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min)
   except (ConnectionError, Timeout, TooManyRedirects) as e:
     return None

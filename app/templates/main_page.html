@@ -8,8 +8,26 @@
     <input type="text" placeholder="Search.." name="search"
     {% if search %} value="{{ search }}" {% endif %}
     >
-    <button type="submit"><i class="fa fa-search"></i></button>
-  <a href="{% url 'app:watchlist' %}"><i class="fa fa-undo"></i></a>
+    <button type="submit">Apply</button>
+    <a href="{% url 'app:watchlist' %}"><i class="fa fa-undo"></i></a>
+
+    <div style="margin-top: 1rem;">
+      <label for="vol_change_min">Volume 24h change min:</label>
+      <input type="number" id="vol_change_min" name="vol_change_min"
+      {% if vol_change_min %} value="{{vol_change_min}}" {% endif %}>
+    </div>
+
+    <div style="margin-top: 1rem;">
+      <label for="dom_min">Market cap dominance min:</label>
+      <input type="number" step="0.01" id="dom_min" name="dom_min"
+      {% if dom_min %} value="{{ dom_min }}" {% endif %}>
+    </div>
+
+    <div style="margin-top: 1rem;">
+      <label for="vol_per_mcap_min">Volume 24h / Market cap:</label>
+      <input type="number" step="0.001" id="vol_per_mcap_min" name="vol_per_mcap_min"
+      {% if vol_per_mcap_min %} value="{{vol_per_mcap_min}}" {% endif %}>
+    </div>
   </form>
   <p>
   {% if watchlist %}
