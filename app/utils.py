@@ -53,11 +53,11 @@ def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min):
     conditions = []
     if search:
       conditions.append(search in item["Name"])
-    if vol_change_min:
+    if vol_change_min != None:
       conditions.append(float(vol_change_min) <= item["Volume change 24h"])
-    if dom_min:
+    if dom_min != None:
       conditions.append(float(dom_min) <= item["Market cap dominance"])
-    if vol_per_mcap_min:
+    if vol_per_mcap_min != None:
       conditions.append(float(vol_per_mcap_min) <= item["Volume 24h / market cap"])
     if condition_AND_list(conditions):
       filtered_data.append(item)
