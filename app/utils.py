@@ -34,10 +34,19 @@ def formatted_data(data):
     formatted_data.append(dict)
   return formatted_data
 
-def get_watchlist():
+def filter_data(data, search):
+  filtered_data = []
+  if search:
+    for item in data:
+      if search in item["Name"]:
+        filtered_data.append(item)
+    return filtered_data
+  return data
+
+def get_watchlist(search):
   try:
     response = session.get(API_URL)
     data = json.loads(response.text)
-    return formatted_data(data["data"])
+    return filter_data(formatted_data(data["data"]), search)
   except (ConnectionError, Timeout, TooManyRedirects) as e:
     return None

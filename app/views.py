@@ -9,6 +9,7 @@ class WatchListView(MultipleObjectTemplateResponseMixin, View):
     template_name = 'main_page.html'
 
     def get(self, request):
-        watchlist = get_watchlist()
-        ctx = { 'watchlist': watchlist }
+        search = request.GET.get('search', False)
+        watchlist = get_watchlist(search)
+        ctx = { 'watchlist': watchlist, 'search': search }
         return render(request, self.template_name, ctx)
