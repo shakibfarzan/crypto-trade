@@ -13,12 +13,17 @@ class WatchListView(MultipleObjectTemplateResponseMixin, View):
         vol_change_min = request.GET.get('vol_change_min', default=None)
         dom_min = request.GET.get('dom_min', default=None)
         vol_per_mcap_min = request.GET.get('vol_per_mcap_min', default=None)
-        watchlist = get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min)
+        page = request.GET.get('page', default=1)
+        page_size = int(request.GET.get('page_size', default=100))
+        count, watchlist = get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_size)
         ctx = { 
             'watchlist': watchlist, 
             'search': search,
             'vol_change_min': vol_change_min,
             'dom_min': dom_min,
-            'vol_per_mcap_min': vol_per_mcap_min
+            'vol_per_mcap_min': vol_per_mcap_min,
+            'page': page,
+            'page_size': page_size,
+            'num_of_pages': int(count / page_size) + 1,
             }
         return render(request, self.template_name, ctx)

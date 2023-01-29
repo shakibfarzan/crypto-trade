@@ -28,7 +28,9 @@ def formatted_data(data):
     volume_change_24h = usd_quote["volume_change_24h"]
     market_cap = usd_quote["market_cap"]
     market_cap_dominance = usd_quote["market_cap_dominance"]
-    volume_24h_per_market_cap = volume_24h / market_cap
+    volume_24h_per_market_cap = 0
+    if market_cap > 0:
+      volume_24h_per_market_cap = volume_24h / market_cap
     dict = { 
             "Name": name, 
             "Price": price, 
@@ -53,24 +55,25 @@ def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min):
     conditions = []
     if search:
       conditions.append(search in item["Name"])
-    if vol_change_min != None:
+    if vol_change_min != None and vol_change_min != '':
       conditions.append(float(vol_change_min) <= item["Volume change 24h"])
-    if dom_min != None:
+    if dom_min != None and dom_min != '':
       conditions.append(float(dom_min) <= item["Market cap dominance"])
-    if vol_per_mcap_min != None:
+    if vol_per_mcap_min != None and vol_per_mcap_min != '':
       conditions.append(float(vol_per_mcap_min) <= item["Volume 24h / market cap"])
     if condition_AND_list(conditions):
       filtered_data.append(item)
   return filtered_data
 
-def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min):
+def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_size):
+  start = ((int(page) - 1) * int(page_size) + 1)
   try:
-    # parameters = {
-    #   'limit', limit,
-    #   'start', start,
-    # }
-    response = session.get(API_URL)
+    parameters = {
+      'limit': page_size,
+      'start': start,
+    }
+    response = session.get(API_URL, params=parameters)
     data = json.loads(response.text)
-    return filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min)
+    return data["status"]["total_count"], filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min)
   except (ConnectionError, Timeout, TooManyRedirects) as e:
     return None

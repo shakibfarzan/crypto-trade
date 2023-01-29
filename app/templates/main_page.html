@@ -8,6 +8,14 @@
     <input type="text" placeholder="Search.." name="search"
     {% if search %} value="{{ search }}" {% endif %}
     >
+    <label for="page">Page:</label>
+    <input type="number" id="page" name="page" min="1" max="{{ num_of_pages }}"
+    {% if page %} value="{{page}}" {% endif %}>
+  
+    <label for="page_size">Page size:</label>
+    <input type="number" id="page_size" name="page_size" min="100" max="5000"
+    {% if page_size %} value="{{page_size}}" {% endif %}>
+  
     <button type="submit">Apply</button>
     <a href="{% url 'app:watchlist' %}"><i class="fa fa-undo"></i></a>
 
