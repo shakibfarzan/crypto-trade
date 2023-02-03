@@ -8,21 +8,28 @@ from trade.settings import BASE_DIR
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-API_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+CMC_API_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+CG_API_URL = 'https://open-api.coinglass.com/public/v2/open_interest'
 
-headers = {
+CMC_headers = {
   'Accepts': 'application/json',
-  'X-CMC_PRO_API_KEY': env("API_KEY"),
+  'X-CMC_PRO_API_KEY': env("CMC_API_KEY"),
+}
+
+CG_headers = {
+    "accept": "application/json",
+    "coinglassSecret": env("CG_API_KEY"),
 }
 
 session = Session()
-session.headers.update(headers)
+
 
 def formatted_data(data):
   formatted_data = []
   for item in data:
     usd_quote = item["quote"]["USD"]
     name = item["name"]
+    symbol = item["symbol"]
     price = usd_quote["price"]
     volume_24h = usd_quote["volume_24h"]
     volume_change_24h = usd_quote["volume_change_24h"]
@@ -32,7 +39,8 @@ def formatted_data(data):
     if market_cap > 0:
       volume_24h_per_market_cap = volume_24h / market_cap
     dict = { 
-            "Name": name, 
+            "Name": name,
+            "Symbol": symbol,
             "Price": price, 
             "Volume 24h": volume_24h,
             "Volume change 24h": volume_change_24h,
@@ -72,8 +80,39 @@ def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_
       'limit': page_size,
       'start': start,
     }
-    response = session.get(API_URL, params=parameters)
+    session.headers.update(CMC_headers)
+    response = session.get(CMC_API_URL, params=parameters)
     data = json.loads(response.text)
     return data["status"]["total_count"], filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min)
-  except (ConnectionError, Timeout, TooManyRedirects) as e:
+  except (ConnectionError, Timeout, TooManyRedirects, KeyError) as e:
+    return None
+
+def formatted_OI(data):
+  dict = {
+    "Open Interest": data["openInterest"],
+    "4 hours OI change %": data["h4OIChangePercent"],
+    "1 hour OI change %": data["h1OIChangePercent"],
+    "24 hours OI change %": data["h24Change"],
+    "OI amount": data["openInterestAmount"],
+    "Volume": data["volUsd"],
+    "Volume change %": data["volChangePercent"],
+    "Average funding rate": data["avgFundingRate"],
+  }
+  return dict
+
+def get_oi(symbol):
+  try:
+    paramteres = {
+      'symbol': symbol
+    }
+    session.headers.update(CG_headers)
+    response = session.get(CG_API_URL, params=paramteres)
+    data = json.loads(response.text)
+    oi_all_data = None
+    for item in data["data"]:
+      if item["exchangeName"] == "All":
+        oi_all_data = item
+        break
+    return formatted_OI(oi_all_data)
+  except (ConnectionError, Timeout, TooManyRedirects, KeyError) as e:
     return None

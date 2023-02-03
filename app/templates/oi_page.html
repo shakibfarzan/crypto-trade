@@ -1,0 +1,21 @@
+{% extends 'base_bootstrap.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<h1><strong>{{symbol}}</strong> OI</h1>
+<div>
+    <p>
+    {% if oi_data %}
+    {% for key, value in oi_data.items %}
+        <div>
+            <p>{{ key }}: <strong>{{ value }}</strong></p>
+        </div>
+    {% endfor %}
+    {% else %}
+      <p>No data!</p>
+    {% endif %}
+    </p>
+    {% else %}
+    <a href="{% url 'login' %}?next={% url 'app:watchlist' %}">Login</a>
+    {% endif %}
+  </div>
+{% endblock %}
