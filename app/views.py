@@ -2,10 +2,9 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic.list import MultipleObjectTemplateResponseMixin
 
-from app.utils import get_watchlist
+from app.utils import get_oi, get_watchlist
 
 class WatchListView(MultipleObjectTemplateResponseMixin, View):
-
     template_name = 'main_page.html'
 
     def get(self, request):
@@ -26,4 +25,15 @@ class WatchListView(MultipleObjectTemplateResponseMixin, View):
             'page_size': page_size,
             'num_of_pages': int(count / page_size) + 1,
             }
+        return render(request, self.template_name, ctx)
+
+class OIView(MultipleObjectTemplateResponseMixin, View):
+    template_name = 'oi_page.html'
+
+    def get(self, request, symbol):
+        oi_data = get_oi(symbol)
+        ctx = {
+            'oi_data': oi_data,
+            'symbol': symbol,
+        }
         return render(request, self.template_name, ctx)
