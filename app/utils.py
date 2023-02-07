@@ -47,7 +47,8 @@ def formatted_data(data):
             "Volume change 24h": volume_change_24h,
             "Market cap": market_cap,
             "Market cap dominance": market_cap_dominance,
-            "Volume 24h / market cap": volume_24h_per_market_cap
+            "Volume 24h / market cap": volume_24h_per_market_cap,
+            "slug": generate_slug(name)
         }
     formatted_data.append(dict)
   return formatted_data
@@ -57,6 +58,10 @@ def condition_AND_list(conditions: list([bool])) -> bool:
     if not cond:
       return False
   return True
+
+def generate_slug(name: str):
+  lst = name.lower().split(' ')
+  return '-'.join(lst)
 
 def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min):
   filtered_data = []
