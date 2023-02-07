@@ -48,7 +48,7 @@
       <div>
         {% for key, value in item.items %}
         <li>
-          <p>{{ key }}: <strong>{{ value }}</strong></p>
+          <p>{{ key }}: <strong>{% if key == 'Name' %}<a href="{{ cmc_url }}/{{ value|lower }}" target="_blank">{{ value }}</a> {% else %}{{ value }}{% endif %}</strong></p>
         </li>
         {% endfor %}
       </div>

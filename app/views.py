@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic.list import MultipleObjectTemplateResponseMixin
 
-from app.utils import get_oi, get_watchlist
+from app.utils import CMC_CURRENCY_URL, get_oi, get_watchlist
 
 class WatchListView(MultipleObjectTemplateResponseMixin, View):
     template_name = 'main_page.html'
@@ -24,6 +24,7 @@ class WatchListView(MultipleObjectTemplateResponseMixin, View):
             'page': page,
             'page_size': page_size,
             'num_of_pages': int(count / page_size) + 1,
+            'cmc_url': CMC_CURRENCY_URL,
             }
         return render(request, self.template_name, ctx)
 
