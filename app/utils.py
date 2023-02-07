@@ -8,6 +8,7 @@ from trade.settings import BASE_DIR
 env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+CMC_CURRENCY_URL = "https://coinmarketcap.com/currencies"
 CMC_API_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
 CG_API_URL = 'https://open-api.coinglass.com/public/v2/open_interest'
 
