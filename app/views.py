@@ -15,7 +15,6 @@ class WatchListView(MultipleObjectTemplateResponseMixin, View):
         page = request.GET.get('page', default=1)
         page_size = int(request.GET.get('page_size', default=100))
         count, watchlist = get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_size)
-        print(count)
         ctx = { 
             'watchlist': watchlist, 
             'search': search,
