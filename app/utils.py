@@ -3,6 +3,7 @@ from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import environ
+from app.models import Historical
 
 from trade.settings import BASE_DIR
 env = environ.Env()
@@ -85,13 +86,26 @@ def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_
     parameters = {
       'limit': page_size,
       'start': start,
-    }
+    } 
     session.headers.update(CMC_headers)
     response = session.get(CMC_API_URL, params=parameters)
     data = json.loads(response.text)
     return data["status"]["total_count"], filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min)
   except (ConnectionError, Timeout, TooManyRedirects, KeyError) as e:
     return None
+
+def handle_fetch_command():
+  page_size = 5000
+  page = 1
+  count, data = get_watchlist(None, None, None, None, page, page_size)
+  total_data: list = data
+  while len(data) != 0:
+    page += 1
+    count, data = get_watchlist(None, None, None, None, page, page_size)
+    total_data.extend(data)
+  for e in total_data:
+    Historical.objects.create(name=e["Name"], symbol=e["Symbol"], 
+                              price=e["Price"], volume=e["Volume 24h"], dominance=e["Market cap dominance"])
 
 def formatted_OI(data):
   dict = {
