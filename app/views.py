@@ -1,8 +1,11 @@
+from datetime import datetime, date, timedelta
+import pytz
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.list import MultipleObjectTemplateResponseMixin
+from app.models import Historical
 
-from app.utils import CMC_CURRENCY_URL, get_oi, get_watchlist
+from app.utils import CMC_CURRENCY_URL, convert_historical_query, get_oi, get_watchlist
 
 class WatchListView(MultipleObjectTemplateResponseMixin, View):
     template_name = 'main_page.html'
@@ -36,5 +39,39 @@ class OIView(MultipleObjectTemplateResponseMixin, View):
         ctx = {
             'oi_data': oi_data,
             'symbol': symbol,
+        }
+        return render(request, self.template_name, ctx)
+
+class HistoricalView(MultipleObjectTemplateResponseMixin, View):
+    template_name = 'historical_page.html'
+
+    def get(self, request):
+        search = request.GET.get('search')
+        start_date_str = request.GET.get('start_date') 
+        end_date_str = request.GET.get('end_date')
+        tz = pytz.timezone('UTC')
+        yesterday = datetime.combine(date.today() - timedelta(days=1), datetime.min.time())
+        today = datetime.combine(date.today(), datetime.min.time())
+
+        start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else yesterday
+        end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else today
+
+        start_date = tz.localize(start_date)
+        end_date = tz.localize(end_date)
+        if start_date and end_date and search:
+            query = Historical.objects.filter(created_at__date__gte=start_date, created_at__date__lte=end_date, name__icontains=search)
+        elif start_date and end_date and not search:
+            query = Historical.objects.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
+        elif search:
+            query = Historical.objects.filter(name__icontains=search)
+        else:
+            query = Historical.objects.all()
+
+        historical_list = convert_historical_query(list(query))
+        ctx = {
+            'search': search,
+            'start_date': start_date,
+            'end_date': end_date,
+            'historical_list': historical_list,
         }
         return render(request, self.template_name, ctx)

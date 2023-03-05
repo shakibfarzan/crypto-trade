@@ -136,3 +136,16 @@ def get_oi(symbol):
     return formatted_OI(oi_all_data)
   except (ConnectionError, Timeout, TooManyRedirects, KeyError) as e:
     return None
+  
+
+def convert_historical_query(queryset: list([Historical])):
+  map = {}
+  for item in queryset:
+    map[item.symbol] = {
+      "Symbol": item.symbol,
+      "Name": item.name,
+      "Price": map[item.symbol]["Price"] - float(item.price) if item.symbol in map else float(item.price),
+      "Volume": map[item.symbol]["Volume"] - float(item.volume) if item.symbol in map else float(item.volume),
+      "Dominance": map[item.symbol]["Dominance"] - float(item.dominance) if item.symbol in map else float(item.dominance)
+    }
+  return list(map.values())

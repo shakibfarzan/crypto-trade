@@ -16,6 +16,6 @@
     </p>
     {% else %}
     <a href="{% url 'login' %}?next={% url 'app:watchlist' %}">Login</a>
-    {% endif %}
   </div>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base_bootstrap.html' %}
+{% block content %}
+<h1>Watch list - Historical</h1>
+{% if user.is_authenticated %}
+    <a href="{% url 'app:watchlist' %}">Watchlist</a>
+    <form style="margin-top: 1rem;">
+        <input type="text" placeholder="Search.." name="search"
+        {% if search %} value="{{ search }}" {% endif %}
+        >
+        
+        <button type="submit">Apply</button>
+        <div style="margin-top: 1rem;">
+            <label for="start_date">Start date:</label>
+            <input style="margin-right: 1rem;" type="date" name="start_date" id="start_date" value="{{ start_date|date:'Y-m-d' }}">
+            
+            <label for="end_date">End date:</label>
+            <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}">
+        </div>
+      </form>
+      {% if historical_list %}
+      <ul style="margin-top: 1rem">
+        {% for item in historical_list %}
+        <div>
+          {% for key, value in item.items %}
+          <li>
+            <p>{{ key }}: <strong>{{ value }}</strong></p>
+          </li>
+          {% endfor %}
+        </div>
+        <hr>
+        {% endfor %}
+      </ul>
+      {% endif %}
+{% endif %}
+{% endblock %}
