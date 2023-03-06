@@ -16,6 +16,23 @@
             <label for="end_date">End date:</label>
             <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}">
         </div>
+        <div class="filter">
+          <div style="margin-top: 1rem;">
+            <label for="price">Price:</label>
+            <input type="number" style="margin-right: 1rem;" id="price" name="price"
+            {% if price %} value="{{price}}" {% endif %}>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label for="volume">Volume:</label>
+            <input type="number" style="margin-right: 1rem;" id="volume" name="volume"
+            {% if volume %} value="{{volume}}" {% endif %}>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label for="dominance">Dominance:</label>
+            <input type="number" id="dominance" name="dominance"
+            {% if dominance %} value="{{dominance}}" {% endif %}>
+          </div>
+      </div>
       </form>
       {% if historical_list %}
       <ul style="margin-top: 1rem">
