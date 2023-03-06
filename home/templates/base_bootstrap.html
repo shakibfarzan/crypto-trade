@@ -55,6 +55,23 @@ content="width=device-width, initial-scale=1, shrink-to-fit=no"
       #scroll-to-top:hover {
         background-color: #ccc;
       }
+      .filter {
+        display: flex;
+      }
+
+      /* For large screens (e.g. desktops) */
+      @media screen and (min-width: 768px) {
+        .filter {
+          flex-direction: row;
+        }
+      }
+
+      /* For small screens (e.g. mobile devices) */
+      @media screen and (max-width: 767px) {
+        .filter {
+          flex-direction: column;
+        }
+      }
 </style>
 <body>
 <div class="container">

@@ -49,6 +49,10 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
         search = request.GET.get('search')
         start_date_str = request.GET.get('start_date') 
         end_date_str = request.GET.get('end_date')
+        price = request.GET.get('price', default=None)
+        volume = request.GET.get('volume', default=None)
+        dominance = request.GET.get('dominance', default=None)
+
         tz = pytz.timezone('UTC')
         yesterday = datetime.combine(date.today() - timedelta(days=1), datetime.min.time())
         today = datetime.combine(date.today(), datetime.min.time())
@@ -67,11 +71,14 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
         else:
             query = Historical.objects.all()
 
-        historical_list = convert_historical_query(list(query))
+        historical_list = convert_historical_query(list(query), price, volume, dominance)
         ctx = {
             'search': search,
             'start_date': start_date,
             'end_date': end_date,
             'historical_list': historical_list,
+            'price': price,
+            'volume': volume,
+            'dominance': dominance
         }
         return render(request, self.template_name, ctx)
