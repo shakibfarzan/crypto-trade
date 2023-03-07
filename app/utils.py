@@ -94,19 +94,6 @@ def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_
   except (ConnectionError, Timeout, TooManyRedirects, KeyError) as e:
     return None
 
-def handle_fetch_command():
-  page_size = 5000
-  page = 1
-  count, data = get_watchlist(None, None, None, None, page, page_size)
-  total_data: list = data
-  while len(data) != 0:
-    page += 1
-    count, data = get_watchlist(None, None, None, None, page, page_size)
-    total_data.extend(data)
-  for e in total_data:
-    Historical.objects.create(name=e["Name"], symbol=e["Symbol"], 
-                              price=e["Price"], volume=e["Volume 24h"], dominance=e["Market cap dominance"])
-
 def formatted_OI(data):
   dict = {
     "Open Interest": round(data["openInterest"], 3),
