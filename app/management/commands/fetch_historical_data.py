@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
 from app.models import Historical
-from app.utils import get_watchlist 
+from app.utils.cmc import get_watchlist
 
 class Command(BaseCommand):
     help = "Fetch historical data from the CMC API to the database"

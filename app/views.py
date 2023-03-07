@@ -4,8 +4,9 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic.list import MultipleObjectTemplateResponseMixin
 from app.models import Historical
-
-from app.utils import CMC_CURRENCY_URL, convert_historical_query, get_oi, get_watchlist
+from app.utils.cg import get_oi
+from app.utils.cmc import CMC_CURRENCY_URL, get_watchlist
+from app.utils.historical import convert_historical_query
 
 class WatchListView(MultipleObjectTemplateResponseMixin, View):
     template_name = 'main_page.html'
