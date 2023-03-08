@@ -5,7 +5,7 @@ from app.utils.cmc import get_watchlist
 
 class Command(BaseCommand):
     help = "Fetch historical data from the CMC API to the database"
-    def fetch():
+    def fetch(self):
         page_size = 5000
         page = 1
         count, data = get_watchlist(None, None, None, None, page, page_size)
@@ -18,7 +18,7 @@ class Command(BaseCommand):
           Historical.objects.create(name=e["Name"], symbol=e["Symbol"], 
                               price=e["Price"], volume=e["Volume 24h"], dominance=e["Market cap dominance"])
     
-    def delete_old_records():
+    def delete_old_records(self):
         thirty_days_ago = datetime.now() - timedelta(days=30)
         old_records = Historical.objects.filter(created_at__date__lte=thirty_days_ago)
         old_records.delete()
