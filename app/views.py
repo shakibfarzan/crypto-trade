@@ -1,6 +1,7 @@
 from datetime import datetime, date, timedelta
 import pytz
 from django.shortcuts import render
+from django.db.models import Q
 from django.views import View
 from django.views.generic.list import MultipleObjectTemplateResponseMixin
 from app.models import Historical
@@ -64,13 +65,9 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
         start_date = tz.localize(start_date)
         end_date = tz.localize(end_date)
         if start_date and end_date and search:
-            query = Historical.objects.filter(created_at__date__gte=start_date, created_at__date__lte=end_date, name__icontains=search)
+            query = Historical.objects.filter(Q(created_at__date=start_date) | Q(created_at__date=end_date), name__icontains=search)
         elif start_date and end_date and not search:
-            query = Historical.objects.filter(created_at__date__gte=start_date, created_at__date__lte=end_date)
-        elif search:
-            query = Historical.objects.filter(name__icontains=search)
-        else:
-            query = Historical.objects.all()
+            query = Historical.objects.filter(Q(created_at__date=start_date) | Q(created_at__date=end_date))
 
         historical_list = convert_historical_query(list(query), price, volume, dominance)
         ctx = {

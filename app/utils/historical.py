@@ -1,15 +1,16 @@
 from app.models import Historical
-from app.utils.utility import condition_AND_list
+from app.utils.utility import condition_AND_list, generate_slug, get_diff_percent
 
 def convert_historical_query(queryset: list([Historical]), price, volume, dominance):
   map = {}
   for item in queryset:
     map[item.symbol] = {
-      "Symbol": item.symbol,
       "Name": item.name,
-      "Price": map[item.symbol]["Price"] - float(item.price) if item.symbol in map else float(item.price),
-      "Volume": map[item.symbol]["Volume"] - float(item.volume) if item.symbol in map else float(item.volume),
-      "Dominance": map[item.symbol]["Dominance"] - float(item.dominance) if item.symbol in map else float(item.dominance)
+      "Symbol": item.symbol,
+      "Price": get_diff_percent(map[item.symbol]["Price"], float(item.price)) if item.symbol in map else float(item.price),
+      "Volume": get_diff_percent(map[item.symbol]["Volume"], float(item.volume)) if item.symbol in map else float(item.volume),
+      "Dominance": get_diff_percent(map[item.symbol]["Dominance"], float(item.dominance)) if item.symbol in map else float(item.dominance),
+      "slug": generate_slug(item.name)
     }
   all = list(map.values())
   filtered_data = []
