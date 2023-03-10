@@ -29,8 +29,13 @@
           </div>
           <div style="margin-top: 1rem;">
             <label for="dominance">Dominance:</label>
-            <input type="number" id="dominance" name="dominance"
+            <input type="number" style="margin-right: 1rem;" id="dominance" name="dominance"
             {% if dominance %} value="{{dominance}}" {% endif %}>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label for="volume_divided_market">Volume / Market cap:</label>
+            <input type="number" id="volume_divided_market" name="volume_divided_market"
+            {% if volume_divided_market %} value="{{volume_divided_market}}" {% endif %}>
           </div>
       </div>
       </form>
@@ -39,9 +44,11 @@
         {% for item in historical_list %}
         <div>
           {% for key, value in item.items %}
+          {% if key != 'slug' %}
           <li>
-            <p>{{ key }}: <strong>{{ value }}</strong></p>
+            <p>{{ key }}: <strong>{% if key == 'Name' %}<a href="{{ cmc_url }}/{{ item.slug }}" target="_blank">{{ value }}</a> {% else %}{{ value }}{% endif %}</strong></p>
           </li>
+          {% endif %}
           {% endfor %}
         </div>
         <hr>
