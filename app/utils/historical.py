@@ -10,6 +10,7 @@ def convert_historical_query(queryset: list([Historical]), price, volume, domina
       "Price": get_diff_percent(map[item.symbol]["Price"], float(item.price)) if item.symbol in map else float(item.price),
       "Volume": get_diff_percent(map[item.symbol]["Volume"], float(item.volume)) if item.symbol in map else float(item.volume),
       "Dominance": get_diff_percent(map[item.symbol]["Dominance"], float(item.dominance)) if item.symbol in map else float(item.dominance),
+      "Volume / Market cap": get_diff_percent(map[item.symbol]["Volume / Market cap"], float(item.volume_divided_market)) if item.symbol in map else float(item.volume_divided_market),
       "slug": generate_slug(item.name)
     }
   all = list(map.values())

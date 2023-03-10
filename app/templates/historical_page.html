@@ -19,18 +19,23 @@
         <div class="filter">
           <div style="margin-top: 1rem;">
             <label for="price">Price:</label>
-            <input type="number" min="-100" max="100" style="margin-right: 1rem;" id="price" name="price"
+            <input type="number" style="margin-right: 1rem;" id="price" name="price"
             {% if price %} value="{{price}}" {% endif %}>
           </div>
           <div style="margin-top: 1rem;">
             <label for="volume">Volume:</label>
-            <input type="number" min="-100" max="100" style="margin-right: 1rem;" id="volume" name="volume"
+            <input type="number" style="margin-right: 1rem;" id="volume" name="volume"
             {% if volume %} value="{{volume}}" {% endif %}>
           </div>
           <div style="margin-top: 1rem;">
             <label for="dominance">Dominance:</label>
-            <input type="number" min="-100" max="100" id="dominance" name="dominance"
+            <input type="number" style="margin-right: 1rem;" id="dominance" name="dominance"
             {% if dominance %} value="{{dominance}}" {% endif %}>
+          </div>
+          <div style="margin-top: 1rem;">
+            <label for="volume_divided_market">Volume / Market cap:</label>
+            <input type="number" id="volume_divided_market" name="volume_divided_market"
+            {% if volume_divided_market %} value="{{volume_divided_market}}" {% endif %}>
           </div>
       </div>
       </form>

@@ -54,6 +54,7 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
         price = request.GET.get('price', default=None)
         volume = request.GET.get('volume', default=None)
         dominance = request.GET.get('dominance', default=None)
+        volume_divided_market = request.GET.get('volume_divided_market', default=None)
 
         tz = pytz.timezone('UTC')
         yesterday = datetime.combine(date.today() - timedelta(days=1), datetime.min.time())
@@ -77,6 +78,7 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
             'historical_list': historical_list,
             'price': price,
             'volume': volume,
-            'dominance': dominance
+            'dominance': dominance,
+            "volume_divided_market": volume_divided_market
         }
         return render(request, self.template_name, ctx)

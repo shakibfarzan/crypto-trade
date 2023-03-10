@@ -16,7 +16,7 @@ class Command(BaseCommand):
           total_data.extend(data)
         for e in total_data:
           Historical.objects.create(name=e["Name"], symbol=e["Symbol"], 
-                              price=e["Price"], volume=e["Volume 24h"], dominance=e["Market cap dominance"])
+                              price=e["Price"], volume=e["Volume 24h"], dominance=e["Market cap dominance"], volume_divided_market=(e["Volume 24h / market cap"]))
     
     def delete_old_records(self):
         thirty_days_ago = datetime.now() - timedelta(days=30)

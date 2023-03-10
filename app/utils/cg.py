@@ -3,7 +3,6 @@ from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import environ
-from app.models import Historical
 
 from trade.settings import BASE_DIR
 env = environ.Env()
