@@ -79,6 +79,7 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
             'price': price,
             'volume': volume,
             'dominance': dominance,
-            "volume_divided_market": volume_divided_market
+            "volume_divided_market": volume_divided_market,
+            'cmc_url': CMC_CURRENCY_URL
         }
         return render(request, self.template_name, ctx)
