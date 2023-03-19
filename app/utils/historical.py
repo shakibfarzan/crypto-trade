@@ -1,7 +1,7 @@
 from app.models import Historical
 from app.utils.utility import condition_AND_list, generate_slug, get_diff_percent
 
-def convert_historical_query(queryset: list([Historical]), price, volume, dominance):
+def convert_historical_query(queryset: list([Historical]), price, volume, dominance, volume_divided_market):
   map = {}
   for item in queryset:
     map[item.symbol] = {
@@ -23,6 +23,8 @@ def convert_historical_query(queryset: list([Historical]), price, volume, domina
       conditions.append(float(volume) <= item["Volume"])
     if dominance != None and dominance != '':
       conditions.append(float(dominance) <= item["Dominance"])
+    if volume_divided_market != None and volume_divided_market != '':
+      conditions.append(float(volume_divided_market) <= item["Volume / Market cap"])
     if condition_AND_list(conditions):
       filtered_data.append(item)
   return filtered_data

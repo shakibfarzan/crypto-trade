@@ -70,7 +70,7 @@ class HistoricalView(MultipleObjectTemplateResponseMixin, View):
         elif start_date and end_date and not search:
             query = Historical.objects.filter(Q(created_at__date=start_date) | Q(created_at__date=end_date))
 
-        historical_list = convert_historical_query(list(query), price, volume, dominance)
+        historical_list = convert_historical_query(list(query), price, volume, dominance, volume_divided_market)
         ctx = {
             'search': search,
             'start_date': start_date,
