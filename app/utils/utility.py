@@ -10,7 +10,7 @@ def generate_slug(name: str):
 
 def get_diff_percent(first_arg, second_arg):
   try:
-    diff_percent = ((first_arg - second_arg) * 100) / first_arg
+    diff_percent = ((second_arg - first_arg) * 100) / first_arg
     return round(diff_percent,3)
   except (KeyError, ZeroDivisionError) as e:
     return 0
