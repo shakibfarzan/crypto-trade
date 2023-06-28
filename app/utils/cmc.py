@@ -40,7 +40,7 @@ def formatted_data(data):
             "Price": round(price, 3), 
             "Volume 24h": round(volume_24h, 3),
             "Volume change 24h": round(volume_change_24h, 3),
-            "Market cap": round(volume_change_24h, 3),
+            "Market cap": round(market_cap, 3),
             "Market cap dominance": round(market_cap_dominance, 3),
             "Volume 24h / market cap": round(volume_24h_per_market_cap, 3),
             "slug": generate_slug(name)
