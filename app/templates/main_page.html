@@ -43,6 +43,11 @@
       <input type="number" step="0.001" id="vol_per_mcap_min" name="vol_per_mcap_min"
       {% if vol_per_mcap_min %} value="{{vol_per_mcap_min}}" {% endif %}>
     </div>
+    <div style="margin-top: 1rem;">
+      <label for="market_cap_min">Market cap:</label>
+      <input type="number" step="0.001" id="market_cap_min" name="market_cap_min"
+      {% if market_cap_min %} value="{{market_cap_min}}" {% endif %}>
+    </div>
   </form>
   <p>
   {% if watchlist %}
@@ -53,7 +58,17 @@
         {% for key, value in item.items %}
         {% if key != 'slug' %}
         <li>
-          <p>{{ key }}: <strong>{% if key == 'Name' %}<a href="{{ cmc_url }}/{{ item.slug }}" target="_blank">{{ value }}</a> {% else %}{{ value }}{% endif %}</strong></p>
+          <p>{{ key }}: 
+            <strong>
+              {% if key == 'Name' %}<a href="{{ cmc_url }}/{{ item.slug }}" target="_blank">{{ value }}</a>
+              {% else %}{% if key == 'Symbol'%}
+                {{ value }}
+              {% else %}
+                {{ value|floatformat:"2g" }}
+              {% endif %}
+              {% endif %}
+            </strong>
+          </p>
         </li>
         {% endif %}
         {% endfor %}
