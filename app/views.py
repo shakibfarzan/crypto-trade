@@ -31,6 +31,7 @@ class WatchListView(MultipleObjectTemplateResponseMixin, View):
             'page_size': page_size,
             'num_of_pages': int(count / page_size) + 1,
             'cmc_url': CMC_CURRENCY_URL,
+            "market_cap_min": market_cap_min
             }
         return render(request, self.template_name, ctx)
 
