@@ -48,7 +48,7 @@ def formatted_data(data):
     formatted_data.append(dict)
   return formatted_data
 
-def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min):
+def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min, market_cap_min):
   filtered_data = []
   for item in data:
     conditions = []
@@ -60,11 +60,13 @@ def filter_data(data, search, vol_change_min, dom_min, vol_per_mcap_min):
       conditions.append(float(dom_min) <= item["Market cap dominance"])
     if vol_per_mcap_min != None and vol_per_mcap_min != '':
       conditions.append(float(vol_per_mcap_min) <= item["Volume 24h / market cap"])
+    if market_cap_min != None and market_cap_min != '':
+      conditions.append(float(market_cap_min) <= item["Market cap"])
     if condition_AND_list(conditions):
       filtered_data.append(item)
   return filtered_data
 
-def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_size):
+def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_size, market_cap_min):
   start = ((int(page) - 1) * int(page_size) + 1)
   try:
     parameters = {
@@ -74,7 +76,7 @@ def get_watchlist(search, vol_change_min, dom_min, vol_per_mcap_min, page, page_
     session.headers.update(CMC_headers)
     response = session.get(CMC_API_URL, params=parameters)
     data = json.loads(response.text)
-    return data["status"]["total_count"], filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min)
+    return data["status"]["total_count"], filter_data(formatted_data(data["data"]), search, vol_change_min, dom_min, vol_per_mcap_min, market_cap_min)
   except (ConnectionError, Timeout, TooManyRedirects, KeyError) as e:
     return None
   

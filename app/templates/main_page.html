@@ -43,6 +43,11 @@
       <input type="number" step="0.001" id="vol_per_mcap_min" name="vol_per_mcap_min"
       {% if vol_per_mcap_min %} value="{{vol_per_mcap_min}}" {% endif %}>
     </div>
+    <div style="margin-top: 1rem;">
+      <label for="market_cap_min">Market cap:</label>
+      <input type="number" step="0.001" id="market_cap_min" name="market_cap_min"
+      {% if market_cap_min %} value="{{market_cap_min}}" {% endif %}>
+    </div>
   </form>
   <p>
   {% if watchlist %}
